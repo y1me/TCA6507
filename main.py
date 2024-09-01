@@ -187,21 +187,33 @@ def main():
     #Set All LED OFF
     tca6507.set_led(["LED0","LED1","LED2","LED5","LED6","LED7"],LED_OFF)
     tca6507.set_led(["LED3","LED4"],LED_OFF)
+    # write 0xOO in reg 0x00, 0x01, 0x02
     tca6507.update_led()
 ################# POWER ON/OFF CONFIG #########################################
     #Power on/off config (WHITE LED FADE ON/FADE OFF)
+    # write 0xCA in reg 0x09
     tca6507.set_oneshot_masterint_param({"ALD_INTENSITY":10,"ALD_EN_PWM0":0,"ALD_EN_PWM1":0,"ONE_SHOT_PWM0":1,"ONE_SHOT_PWM1":1})
+    # write 0xOO in reg 0x10
     tca6507.set_led_param(INITIALIZATION,{"BANK0":0,"BANK1":0})
+    # write 0xAA in reg 0x04
     tca6507.set_led_param(FULLYON,{"BANK0":10,"BANK1":10})
+    # write 0xAA in reg 0x06
     tca6507.set_led_param(FIRSTFULLYOFF,{"BANK0":10,"BANK1":10})
+    # write 0xAA in reg 0x07
     tca6507.set_led_param(SECONDFULLYOFF,{"BANK0":10,"BANK1":10})
+    # write 0xAA in reg 0x03
     tca6507.set_led_param(FADEON,{"BANK0":13,"BANK1":13})
+    # write 0xAA in reg 0x05
     tca6507.set_led_param(FADEOFF,{"BANK0":13,"BANK1":13})
+    # write 0xAA in reg 0x08
     tca6507.set_led_param(MAXINTENSITY,{"BANK0":15,"BANK1":15})
+
     tca6507.set_led(["LED3","LED4"],LED_BLINK_1)
 
     #Trigger White LED power on with FadeOn
+    tca6507.set_led_param(FADEON,{"BANK0":13,"BANK1":13})
     tca6507.set_led_param(INITIALIZATION,{"BANK0":10,"BANK1":12})
+    #Set bit 3,4 in register 0x00, 0x01 and 0x02
     tca6507.update_led()
 
     # Debug Print ALL
@@ -212,10 +224,14 @@ def main():
     datalist = [listo[i:i + n] for i in range(0, len(listo), n)]
     print(datalist)
 
-    #Trigger White LED power off with FadeOff
+    #Setup White LED power off with FadeOff
     tca6507.set_led(["LED0","LED1","LED2","LED5","LED6","LED7"],LED_OFF)
     tca6507.set_led(["LED3","LED4"],LED_BLINK_0)
+
+    #Trigger White LED power on with FadeOFF
+    tca6507.set_led_param(FADEOFF,{"BANK0":13,"BANK1":13})
     tca6507.set_led_param(INITIALIZATION,{"BANK0":10,"BANK1":12})
+    #Set bit 3,4 in register 0x01 and 0x02, reset bit 3,4 in register 0x00
     tca6507.update_led()
 
     # Debug Print ALL
@@ -235,6 +251,7 @@ def main():
     tca6507.set_led_param(FADEON, {"BANK0": 2, "BANK1": 1})
     tca6507.set_led_param(FADEOFF, {"BANK0": 2, "BANK1": 1})
     tca6507.set_led_param(MAXINTENSITY, {"BANK0": 15, "BANK1": 15})
+    #Set bit 3,4 in register 0x01, reset bit 3,4 in register 0x00 and 0x02
     tca6507.set_led(["LED3", "LED4"], LED_ON_PWM0)
     tca6507.set_led(["LED0", "LED2", "LED5", "LED6", "LED7"], LED_OFF)
 
