@@ -180,10 +180,17 @@ def main():
     INITIALIZATION = 0x0A
     AUTOINCREMENT = 0x10
 
-    tca6507 = TCA6507()
 
-    tca6507.scan()
+    while True :
+        try:
+            tca6507 = TCA6507()
+            tca6507.scan()
 
+        except EasyMCP2221.exceptions.NotAckError:
+            print("No I2C slave found")
+        except RuntimeError :
+            print("No Device found")
+        time.sleep(1)
     #Set All LED OFF
     tca6507.set_led(["LED0","LED1","LED2","LED5","LED6","LED7"],LED_OFF)
     tca6507.set_led(["LED3","LED4"],LED_OFF)
